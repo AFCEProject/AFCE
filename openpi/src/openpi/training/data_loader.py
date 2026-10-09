@@ -326,10 +326,10 @@ def create_torch_dataset(
             )
             if data_config.afce_cache_root is not None:
                 from pathlib import Path
-                from afce_all11.pi_bridge import EffectCacheDataset
+                from afce.pi_bridge import EffectCacheDataset
                 cache_dataset = EffectCacheDataset
                 if data_config.afce_joint_decoder:
-                    from afce_all11.pi_bridge_joint import JointEffectCacheDataset
+                    from afce.pi_bridge_joint import JointEffectCacheDataset
                     cache_dataset = JointEffectCacheDataset
                 dataset = cache_dataset(dataset, Path(data_config.afce_cache_root) / Path(source.root).name)
             if data_config.source_target_state_dim is not None or data_config.source_target_action_dim is not None:

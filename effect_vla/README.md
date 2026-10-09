@@ -132,5 +132,5 @@ Generic Future（Ablation 2）用 `--generic-future` 再 cache 一份到独立�
 
 ```bash
 cd "$AFCE_ROOT"
-PYTHONPATH="$PWD" python -m unittest effect_vla.tests.test_effect_v1
+PYTHONPATH="$PWD" python -m unittest effect_vla.tests.test_effect
 ```

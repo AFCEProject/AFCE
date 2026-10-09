@@ -15,9 +15,9 @@ effect_pilot_tasks:
   - pick_bucket
   - hammer_nail
 effect_init_checkpoints:
-  water_plant: "../checkpoints/dexjoco_pilot3_task_balanced/pilot3_task_balanced_v2/29999/params"
-  pick_bucket: "../checkpoints/dexjoco_pilot3_task_balanced/pilot3_task_balanced_v2/29999/params"
-  hammer_nail: "../checkpoints/dexjoco_pilot3_task_balanced/pilot3_task_balanced_v2/29999/params"
+  water_plant: "../checkpoints/dexjoco_pilot_multitask/pilot_multitask/29999/params"
+  pick_bucket: "../checkpoints/dexjoco_pilot_multitask/pilot_multitask/29999/params"
+  hammer_nail: "../checkpoints/dexjoco_pilot_multitask/pilot_multitask/29999/params"
 wandb_enabled: true
 
 batch_size: 32

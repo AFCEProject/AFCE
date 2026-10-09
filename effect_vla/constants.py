@@ -91,11 +91,11 @@ def _env_str(name: str, default: Path) -> str:
 
 DEXJOCO_ROOT = _env_str("AFCE_ROOT", _REPO_ROOT)
 DEFAULT_LEROBOT_ROOT = _env_str(
-    "C01_DATA",
+    "AFCE_DATA",
     Path(DEXJOCO_ROOT) / "datasets" / "dexjoco_lerobot_datasets",
 )
 DEFAULT_DINO_CKPT = _env_str(
-    "C01_DINO",
+    "AFCE_DINO",
     Path(DEXJOCO_ROOT) / "third_party" / "weights" / "dinov3",
 )
 DEFAULT_CACHE_ROOT = _env_str(

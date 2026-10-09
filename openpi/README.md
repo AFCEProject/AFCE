@@ -210,24 +210,24 @@ cd openpi
 conda activate openpi
 
 # 1) inspect
-python scripts/dexjoco_11_task_balanced.py --operation inspect \
-  --pilot3 \
+python scripts/dexjoco_multitask.py --operation inspect \
+  --pilot-multitask \
   --data-root ../datasets/dexjoco_lerobot_datasets \
   --init-params-path ../checkpoints/pi05_base_action_dim_44/params
 
-# 2) norm stats (writes assets/dexjoco_pilot3_task_balanced/local_repo/)
-python scripts/dexjoco_11_task_balanced.py --operation norm-stats \
-  --pilot3 \
+# 2) norm stats (writes assets/dexjoco_pilot_multitask/local_repo/)
+python scripts/dexjoco_multitask.py --operation norm-stats \
+  --pilot-multitask \
   --data-root ../datasets/dexjoco_lerobot_datasets \
   --init-params-path ../checkpoints/pi05_base_action_dim_44/params \
-  --exp-name pilot3_task_balanced_v1
+  --exp-name pilot_multitask
 
 # 3) train (~30k steps recommended for 3 tasks)
-python scripts/dexjoco_11_task_balanced.py --operation train \
-  --pilot3 \
+python scripts/dexjoco_multitask.py --operation train \
+  --pilot-multitask \
   --data-root ../datasets/dexjoco_lerobot_datasets \
   --init-params-path ../checkpoints/pi05_base_action_dim_44/params \
-  --exp-name pilot3_task_balanced_v1 \
+  --exp-name pilot_multitask \
   --num-train-steps 30000 --batch-size 32 --save-interval 2000
 ```
 
@@ -241,15 +241,15 @@ bash scripts/pilot3_task_balanced.bash train
 **Custom task list** (still equal 1/N):
 
 ```bash
-python scripts/dexjoco_11_task_balanced.py --operation train \
+python scripts/dexjoco_multitask.py --operation train \
   --tasks water_plant pick_bucket hammer_nail \
   ...
 ```
 
-**Full 11-task** (omit `--tasks` / `--pilot3`):
+**Full 11-task** (omit `--tasks` / `--pilot-multitask`):
 
 ```bash
-python scripts/dexjoco_11_task_balanced.py --operation train \
+python scripts/dexjoco_multitask.py --operation train \
   --data-root ../datasets/dexjoco_lerobot_datasets \
   --init-params-path ../checkpoints/pi05_base_action_dim_44/params \
   --exp-name all11_task_balanced_v1 --num-train-steps 60000
