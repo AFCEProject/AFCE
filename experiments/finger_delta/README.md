@@ -11,7 +11,6 @@
 | finger-Δ E 的统计量 | `scripts/pipeline/prepare_statistics.py`、`afce/calibrated_codec.py` |
 | finger-Δ E 训练 | `afce/train_methods.py`、`scripts/pipeline/train_e.sh` |
 | E 模型与几何损失 | `afce/{codec,calibrated_codec,tuned_codec,geometry_objectives}.py`、`effect_codec/model/` |
-| E 离线评估 | `afce/eval_expanded.py` |
 | E 缓存、decoder 导出 | `afce/export_effect_resume.py`、`export_joint_decoder.py`、`check_joint_decoder.py` |
 | π 与 decoder 的目标函数 | `afce/finger_delta_alignment.py` |
 | 两节点八卡训练 | `afce/multihost_finger_delta_pi.py` |

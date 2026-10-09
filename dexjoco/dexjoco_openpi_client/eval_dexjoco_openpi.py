@@ -127,6 +127,7 @@ def inference_process(
     seed: int,
     host: str,
     inference_count,
+    error_queue: mp.Queue,
 ):
     signal.signal(signal.SIGINT, signal.SIG_IGN)
     _set_seed(seed)
@@ -137,23 +138,79 @@ def inference_process(
     # GPU. The server and client run on the same Slurm node, so disable
     # keepalive pings and wait for the actual inference response instead of
     # dropping a healthy but busy connection.
-    client = websocket_client_policy.WebsocketClientPolicy(
-        host=host, port=port, ping_interval=None
-    )
+    try:
+        client = websocket_client_policy.WebsocketClientPolicy(
+            host=host, port=port, ping_interval=None
+        )
 
-    while not stop_event.is_set():
-        obs: Observation | None = get_latest(obs_queue)
-        if obs is None:
-            stop_event.wait(0.01)
-            continue
+        while not stop_event.is_set():
+            obs: Observation | None = get_latest(obs_queue)
+            if obs is None:
+                stop_event.wait(0.01)
+                continue
 
-        result = client.infer(obs.obs)
-        with inference_count.get_lock():
-            inference_count.value += 1
-        action_chunk = result["actions"]
-
-        action_queue.put(ActionChunk(action=action_chunk, timestamp=obs.timestamp))
+            # Always clear the in-flight flag after attempting this observation,
+            # including connection / inference failures. Otherwise the main
+            # process can wait forever on inferencing_event.
+            try:
+                result = client.infer(obs.obs)
+                with inference_count.get_lock():
+                    inference_count.value += 1
+                action_chunk = result["actions"]
+                action_queue.put(
+                    ActionChunk(action=action_chunk, timestamp=obs.timestamp)
+                )
+            except Exception as exc:
+                error_queue.put(f"{type(exc).__name__}: {exc}")
+                stop_event.set()
+                break
+            finally:
+                inferencing_event.clear()
+    except Exception as exc:
+        error_queue.put(f"{type(exc).__name__}: {exc}")
+        stop_event.set()
+    finally:
         inferencing_event.clear()
+
+
+def _drain_queue(queue: mp.Queue) -> int:
+    """Drop all pending items. Returns how many were discarded."""
+    dropped = 0
+    while True:
+        try:
+            queue.get_nowait()
+            dropped += 1
+        except Empty:
+            return dropped
+
+
+def _wait_for_inference_idle(
+    inferencing_event: MpEvent,
+    inference_proc: mp.Process,
+    error_queue: mp.Queue,
+    timeout_s: float = 120.0,
+) -> None:
+    """Wait until the worker clears inferencing_event, with hang safeguards."""
+    deadline = time.monotonic() + timeout_s
+    while inferencing_event.is_set():
+        try:
+            message = error_queue.get_nowait()
+        except Empty:
+            message = None
+        if message is not None:
+            inferencing_event.clear()
+            raise RuntimeError(f"Inference subprocess failed: {message}")
+        if not inference_proc.is_alive():
+            inferencing_event.clear()
+            raise RuntimeError(
+                "Inference subprocess exited while inferencing_event was still set"
+            )
+        if time.monotonic() >= deadline:
+            inferencing_event.clear()
+            raise TimeoutError(
+                f"Timed out after {timeout_s:.0f}s waiting for inference to finish"
+            )
+        time.sleep(0.1)
 
 
 def receive_actions(
@@ -351,13 +408,24 @@ def main(
     # Queues connect the control loop with the asynchronous inference worker.
     obs_queue = mp.Queue()
     action_queue = mp.Queue()
+    error_queue = mp.Queue()
     stop_event = mp.Event()
     inferencing_event = mp.Event()
     inference_count = mp.Value("q", inference_offset)
 
     inference_proc = mp.Process(
         target=inference_process,
-        args=(obs_queue, action_queue, stop_event, port, inferencing_event, seed, host, inference_count),
+        args=(
+            obs_queue,
+            action_queue,
+            stop_event,
+            port,
+            inferencing_event,
+            seed,
+            host,
+            inference_count,
+            error_queue,
+        ),
     )
     video_writers = None
 
@@ -483,15 +551,22 @@ def main(
             video_dir.rename(final_video_dir)
 
             # Drain in-flight work before starting the next episode.
-            while True:
-                try:
-                    obs_queue.get_nowait()
-                except Empty:
-                    break
-            while inferencing_event.is_set():
-                time.sleep(0.1)
-            while not action_queue.empty():
-                action_queue.get()
+            # Observations still sitting in obs_queue were never consumed by the
+            # worker, so their matching inferencing_event would never be cleared
+            # unless we cancel the flag here.
+            cancelled_obs = _drain_queue(obs_queue)
+            if cancelled_obs:
+                inferencing_event.clear()
+            _wait_for_inference_idle(
+                inferencing_event, inference_proc, error_queue, timeout_s=120.0
+            )
+            _drain_queue(action_queue)
+            try:
+                message = error_queue.get_nowait()
+            except Empty:
+                message = None
+            if message is not None:
+                raise RuntimeError(f"Inference subprocess failed: {message}")
 
             episode_results.append(bool(env.is_success))
             completed = ep + 1
@@ -531,14 +606,14 @@ def main(
     finally:
         # Shut down worker and release multiprocessing resources.
         stop_event.set()
+        inferencing_event.clear()
         inference_proc.join(timeout=2)
         if inference_proc.is_alive():
             inference_proc.terminate()
             inference_proc.join(timeout=2)
-        obs_queue.cancel_join_thread()
-        obs_queue.close()
-        action_queue.cancel_join_thread()
-        action_queue.close()
+        for queue in (obs_queue, action_queue, error_queue):
+            queue.cancel_join_thread()
+            queue.close()
         env.close()
         if video_writers is not None:
             for writer in video_writers.values():

@@ -194,9 +194,11 @@ def train(config, args):
     if start_step >= config.num_train_steps:
         raise ValueError('The source experiment has already finished')
     if args.calibrate:
-        from afce.calibrate_readout import calibrate
-        calibrate(config,state,loader,train_rng,mesh,data_sharding,state_sharding,replicated,args.calibrate)
-        return 0
+        raise RuntimeError(
+            "--calibrate requires afce.calibrate_readout, which is not included "
+            "in this public release. Use the default fixed-weight finger-Δ "
+            "training path without --calibrate."
+        )
     before_manager_rng = exact_train.host_rng_state()
     checkpointer = exact_train.manager(root, 1000)
     exact_train.restore_host_rng(before_manager_rng)
@@ -317,7 +319,11 @@ def main():
     parser.add_argument('--initialize-from-base', action='store_true')
     parser.add_argument('--decoder-warmup-steps', type=int, default=0)
     parser.add_argument('--variant', choices=('finger_delta',), default='finger_delta')
-    parser.add_argument('--calibrate', type=Path)
+    parser.add_argument(
+        '--calibrate',
+        type=Path,
+        help='Not available in this public release (requires afce.calibrate_readout).',
+    )
     parser.add_argument('--weight', type=float, default=0.25628781345139295)
     args = parser.parse_args()
     jax.distributed.initialize(coordinator_address=os.environ['AFCE_COORDINATOR'],
