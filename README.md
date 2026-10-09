@@ -139,7 +139,3 @@ Note: after open-source cleanup some auxiliary modules were removed; regenerate 
 ## License
 
 MIT — see [`LICENSE`](LICENSE). DexJoCo / OpenPI components retain their upstream attributions where applicable.
-
-## Citation
-
-If you use this code, please cite the AFCE paper (and DexJoCo when using the simulator / datasets). Paper / arXiv links will be added when public.
