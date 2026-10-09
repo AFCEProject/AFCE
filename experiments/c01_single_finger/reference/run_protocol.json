@@ -1,0 +1,45 @@
+{
+  "schema": "c01_single_joint_fixed_finger_v1",
+  "effect_checkpoint_sha256": "274ab34874dd666b40880d218036129585d1271a02398975d471d457f68da654",
+  "effect_cache": "$AFCE_RUNTIME/query_c01_4gpu_20260918/effect_cache",
+  "decoder_init_sha256": "6ee480cb0aa779235cd202f0a6b65f06405ca3bb0f1b8495cb0a6d75c0991738",
+  "effect_normalization_sha256": "48bc5d6926ba71429cf0519c4a2a0b7499da8d83c2595adfe1e804a07269bf9a",
+  "effect_manifest_sha256": "b882ebe0226a925fa9509886e7ba157b39c2cb59856af05cc1802d0bb74758aa",
+  "initialization": "official pi0.5 base plus original C01 decoder",
+  "seed": 42,
+  "batch_size": 32,
+  "target_updates": 60000,
+  "nodes": 2,
+  "gpus": 8,
+  "decoder_warmup_steps": 0,
+  "decoder_update_multiplier": 0.25,
+  "gtaux_weight": 0.25628781345139295,
+  "finger_delta_weight": 0.05,
+  "finger_delta_scale_floor": 0.1,
+  "auxiliary_ramp_updates": 10000,
+  "auxiliary_time_gate": [
+    0.2,
+    0.7
+  ],
+  "objective": "FM(E) + ramp * (0.25628781345139295 GT-AUX + 0.05 finger-delta)",
+  "decoder_gradient": "GT-AUX and finger-delta jointly update pi and the same action decoder",
+  "removed": [
+    "independent frozen D0",
+    "independent adaptive D1",
+    "D1 predicted-E adaptation",
+    "D1 true-E anchor",
+    "D1 full-rollout adaptation"
+  ],
+  "comparison_scope": "decoder training scheme; not decoder count alone",
+  "evaluation": {
+    "seed": 0,
+    "tasks": 11,
+    "episodes_per_task": 50,
+    "total": 550,
+    "nodes": 2,
+    "gpus": 8,
+    "num_denoise_steps": 10,
+    "continuation": "committed episode and environment/server RNG offset",
+    "scheduling": "eight active per-task file locks; three queued tasks picked by first free GPU"
+  }
+}

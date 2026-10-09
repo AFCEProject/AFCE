@@ -1,0 +1,6 @@
+{
+  "complete": true,
+  "optimizer_updates": 60000,
+  "checkpoint_index": 59999,
+  "status": "pi_training_complete_not_rollout_evaluated"
+}

@@ -1,0 +1,66 @@
+{
+  "complete": true,
+  "seed": 0,
+  "episodes_per_task": 50,
+  "tasks": {
+    "bimanual_assembly": {
+      "completed": 50,
+      "success": 6,
+      "rng_offset": 10106
+    },
+    "bimanual_hanoi": {
+      "completed": 50,
+      "success": 15,
+      "rng_offset": 8990
+    },
+    "bimanual_microwave_cook": {
+      "completed": 50,
+      "success": 42,
+      "rng_offset": 5011
+    },
+    "bimanual_photograph": {
+      "completed": 50,
+      "success": 32,
+      "rng_offset": 3944
+    },
+    "bimanual_unlock_ipad": {
+      "completed": 50,
+      "success": 4,
+      "rng_offset": 5499
+    },
+    "click_mouse": {
+      "completed": 50,
+      "success": 29,
+      "rng_offset": 5269
+    },
+    "fold_glasses": {
+      "completed": 50,
+      "success": 29,
+      "rng_offset": 6090
+    },
+    "hammer_nail": {
+      "completed": 50,
+      "success": 45,
+      "rng_offset": 2299
+    },
+    "pick_bucket": {
+      "completed": 50,
+      "success": 36,
+      "rng_offset": 4889
+    },
+    "pinch_tongs": {
+      "completed": 50,
+      "success": 4,
+      "rng_offset": 6773
+    },
+    "water_plant": {
+      "completed": 50,
+      "success": 42,
+      "rng_offset": 2942
+    }
+  },
+  "completed_episodes": 550,
+  "success": 284,
+  "target_episodes": 550,
+  "success_rate": 0.5163636363636364
+}

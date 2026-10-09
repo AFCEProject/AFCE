@@ -1,0 +1,44 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.DS_Store
+.vscode/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+.env
+.env.*
+
+# Local data / models / runs (never commit)
+/runtime/
+/outputs/
+/output/
+/checkpoints/
+/datasets/
+/demos/
+/replay_output/
+/tmp/
+/temp/
+/_replay_test/
+/reports/
+checkpoints_temp/
+converted_datasets/
+.pip/
+.vendor/
+.wheelhouse/
+
+# Local logs and install noise
+*.log
+.smoke_headless_envs.log
+.torch_dl.log
+effect_vla/.deps_tf456/
+
+# Editor / OS
+._*
+*.pre_*
+*.before_*
+
+# One-shot maintenance scripts
+_sanitize_paths.py
+_dexjoco_tmp/

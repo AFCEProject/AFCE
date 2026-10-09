@@ -1,0 +1,32 @@
+Backbone: pi05
+dataset: DexJoCo
+tasks: 11
+policy_cameras: baseline_unchanged
+effect_camera: static_front
+effect_encoder: frozen_dinov3
+robot_mask: simulator_gt_training_only
+effect_anchors: 2
+anchor_fractions: [0.5, 1.0]
+effect_dim: 512
+grounding_dim: 512
+geometry: wrist_plus_fingertips
+action_decoder: original_pi05_fm
+fm_weight: 1.0
+effect_weight: 0.2
+grounding_weight: 0.1
+new_module_lr: 1.0e-4
+action_lr: 2.0e-5
+vlm_lr: 1.0e-5
+effect_target: offline_cached
+dino: frozen
+bootstrap_steps: 3000
+joint_finetune_steps: 10000
+optimizer: adamw
+precision: bf16
+grad_clip: 1.0
+pilot_tasks:
+  - water_plant
+  - pick_bucket
+  - hammer_nail
+pilot_bootstrap_steps: 3000
+pilot_joint_steps: 5000

@@ -1,0 +1,9 @@
+# Baseline-Continue: same DexJoCo π0.5 checkpoint, same steps, only L_FM.
+# The unique variable vs Full is the absence of Effect + Grounding.
+name_suffix: _continue
+extra_steps: 13000
+loss: fm_only
+effect_grounding: false
+lambda_effect: 0.0
+lambda_grounding: 0.0
+bootstrap_steps: 0

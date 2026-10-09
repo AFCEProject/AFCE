@@ -1,0 +1,13 @@
+[project]
+name = "effect-vla"
+version = "0.1.0"
+description = "Task-Effect Grounded π0.5 for DexJoCo"
+requires-python = ">=3.10"
+dependencies = ["numpy"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["effect_vla*"]

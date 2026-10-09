@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checkpoint": "$AFCE_RUNTIME/query_c01_single_finger_20260922/pi/checkpoints/afce_all11_official/c01_single_finger_seed42_60000/59999",
+  "decoder_init_sha256": "6ee480cb0aa779235cd202f0a6b65f06405ca3bb0f1b8495cb0a6d75c0991738",
+  "decoders": {
+    "single_decoder": {
+      "changed_parameter_tensors": 82,
+      "max_abs_update": 0.051613662391901016,
+      "normalization_unchanged": true
+    },
+    "bimanual_decoder": {
+      "changed_parameter_tensors": 82,
+      "max_abs_update": 0.04845934733748436,
+      "normalization_unchanged": true
+    }
+  },
+  "effect_normalization_unchanged": true,
+  "codec_encoder_not_in_policy": true
+}

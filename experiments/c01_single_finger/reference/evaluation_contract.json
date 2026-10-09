@@ -1,0 +1,26 @@
+{
+  "checkpoint": "$AFCE_RUNTIME/query_c01_single_finger_20260922/pi/checkpoints/afce_all11_official/c01_single_finger_seed42_60000/59999",
+  "runtime_sha256": "b36f79bff971a7b3424888f816c3acf20e25f8037c2b002ce180fcfd7c87ce86",
+  "effect_checkpoint_sha256": "274ab34874dd666b40880d218036129585d1271a02398975d471d457f68da654",
+  "decoder_init_sha256": "6ee480cb0aa779235cd202f0a6b65f06405ca3bb0f1b8495cb0a6d75c0991738",
+  "seed": 0,
+  "nodes": 2,
+  "gpus": 8,
+  "inference_decoder": "single jointly trained decoder",
+  "episodes_per_task": 50,
+  "tasks": [
+    "bimanual_assembly",
+    "bimanual_hanoi",
+    "bimanual_microwave_cook",
+    "bimanual_photograph",
+    "bimanual_unlock_ipad",
+    "click_mouse",
+    "fold_glasses",
+    "hammer_nail",
+    "pick_bucket",
+    "pinch_tongs",
+    "water_plant"
+  ],
+  "num_denoise_steps": 10,
+  "method": "C01 E + calibrated GT-AUX + fixed finger-delta + single jointly trained decoder"
+}
